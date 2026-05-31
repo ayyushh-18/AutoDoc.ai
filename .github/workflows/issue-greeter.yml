@@ -1,0 +1,26 @@
+name: Welcome New Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  greet-contributor:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write 
+    
+    steps:
+      - name: Post welcome comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueCreator = context.payload.issue.user.login;
+            const welcomeMessage = `👋 Hello @${issueCreator}! Thanks for opening this issue and showing interest in contributing to the project.\n\nPlease sit back and relax a bit until this issue gets assigned to you. A maintainer will review it shortly.\n\nIn the meantime, feel free to check out our [Contributing Guidelines](CONTRIBUTING.md). Happy coding! 🚀`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: welcomeMessage
+            })
