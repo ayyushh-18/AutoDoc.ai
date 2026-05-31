@@ -29,5 +29,5 @@ Because AutoDoc.ai relies on backend processes to analyze repositories and ping 
 
 **1️⃣ Fork & Clone**
 ```bash
-git clone [https://github.com/abhro05/AutoDoc.ai.git](https://github.com/abhro05/AutoDoc.ai.git)
+git clone https://github.com/abhro05/AutoDoc.ai.git
 cd AutoDoc.ai
