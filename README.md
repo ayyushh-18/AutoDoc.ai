@@ -17,35 +17,44 @@
 ---
 
 # 📖 About AutoDoc.ai
+
 **AutoDoc.ai** addresses the challenge of outdated documentation due to time constraints. It analyzes repository structures and source code to generate structured content while keeping humans in control via manual editing and previews.
 
-### 🌟 Key Features
-- **Repo Analysis**: Deep scanning of repository structure and configuration files.
-- **Automatic Generation**: Instant creation of README.md and CONTRIBUTING.md files.
-- **API Support**: Dedicated documentation generation for API endpoints.
-- **Live Preview**: React-based markdown preview with manual editing capabilities.
-- **Export Ready**: One-click export for production-ready documentation files.
+---
+
+# 🌟 Key Features
+
+- Repo Analysis: Deep scanning of repository structure and configuration files.
+- Automatic Generation: Instant creation of README.md and CONTRIBUTING.md files.
+- API Support: Dedicated documentation generation for API endpoints.
+- Live Preview: React-based markdown preview with manual editing capabilities.
+- Export Ready: One-click export for production-ready documentation files.
 
 ---
 
 # ⚙️ Setup Instructions
 
-> [!IMPORTANT]
-> Ensure you have your Gemini API and GitHub tokens ready before starting the services.
+> Ensure you have your Gemini API key and GitHub token ready before starting the services.
 
-### 1. Installation Steps
-```diff
-+ git clone [https://github.com/abhro05/AutoDoc.ai.git](https://github.com/abhro05/AutoDoc.ai.git)
-+ cd AutoDoc.ai
+---
+
+## 1. Clone the Repository (download the project locally)
+
+```bash
+git clone https://github.com/abhro05/AutoDoc.ai.git
+cd AutoDoc.ai
 
 # Frontend Setup
-+ cd frontend && npm install
+cd frontend
+npm install
 
 # Backend Setup
-+ cd ../backend && npm install
+cd ../backend
+npm install
 
 # AI Service Setup
-+ cd ../ai_service && pip install -r requirements.txt
+cd ../ai_service
+pip install -r requirements.txt
 ```
 # 🔄 System Architecture
 The system utilizes a modular three-layer architecture to manage the documentation workflow
