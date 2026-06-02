@@ -76,7 +76,30 @@ graph LR
     style C fill:#0A192F,stroke:#333
     style D fill:#064E3B,stroke:#333
 ```
-## 🛠️ Tech Stack
+
+# 📁 Project Structure
+
+```text
+AutoDoc.ai/
+├── package.json           # Dependencies and scripts
+├── vite.config.js         # Vite configuration
+├── index.html             # Main HTML entry point
+├── README.md              # This file
+├── src/                   # Frontend source files
+│   ├── main.jsx           # React DOM render entry
+│   ├── pages/             # React components
+│   │   ├── App.jsx        # Routing configuration
+│   │   ├── home.jsx       # Landing page
+│   │   ├── Generator.jsx  # AI Doc Generator workspace
+│   │   └── Contributors.jsx # Contributors display page
+│   └── styles/            # CSS stylesheets
+│       ├── home.css       # Landing page styles
+│       ├── Generator.css  # Generator workspace styles
+│       └── Contributors.css # Contributors page styles
+└── public/                # Static assets
+    └── autodoc.png        # Project logo
+```
+# 🛠️ Tech Stack
 
 AutoDoc.ai is built with a modular, scalable architecture across three specialized layers.
 
