@@ -100,7 +100,6 @@ const Contributors = () => {
           <div key={contributor.id} className="card">
             <img className="avatar" src={contributor.avatar_url} alt={contributor.login} />
             <h2 className="name">{contributor.login}</h2>
-            <span className="badge">{contributor.contributions} Contributions</span>
             <a
               href={contributor.html_url}
               target="_blank"
