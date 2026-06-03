@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Add this import
+import { Link, NavLink } from 'react-router-dom';
 import "../styles/Generator.css";
-import logo from './autodoc.png';
 
 const Generator = () => {
   const [repoUrl, setRepoUrl] = useState('');
@@ -25,14 +24,12 @@ const Generator = () => {
     <div className="generator-container">
       <nav className="navbar">
         <div className="nav-logo">
-          {/* Replace <a> with <Link> */}
-          <Link to="/">
-            <img src={logo} alt="AutoDoc.ai Logo" />
-          </Link>
+          AutoDoc.ai
         </div>
         <ul className="nav-links">
-           {/* Replace <a> with <Link> */}
-          <li><Link to="/" className="back-link">← Back to Home</Link></li>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/generator">Generator</NavLink></li>
+          <li><NavLink to="/contributors">Contributors</NavLink></li>
         </ul>
       </nav>
 
@@ -75,7 +72,7 @@ const Generator = () => {
                 Generating...
               </>
             ) : (
-              'Generate Documentation ✨'
+              'Generate Documentation'
             )}
           </button>
         </div>
