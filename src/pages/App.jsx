@@ -1,9 +1,9 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Generator from './Generator';
-import Contributors from './Contributors';
-import NotFound from './NotFound';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import Generator from "./Generator";
+import Contributors from "./Contributors";
+import NotFound from "./NotFound";
 
 function App() {
   return (
