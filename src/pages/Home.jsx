@@ -1,9 +1,9 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import Navbar from "../components/Navbar";
 
-const Home = () => {
+function Home() {
   return (
     <div className="home-container">
       <Navbar />
@@ -59,6 +59,6 @@ const Home = () => {
       </footer>
     </div>
   );
-};
+}
 
 export default Home;
