@@ -50,6 +50,9 @@ const Contributors = () => {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const fetchContributors = async () => {
       try {
         const cachedData = localStorage.getItem("github_contributors");
@@ -77,6 +80,7 @@ const Contributors = () => {
 
         const response = await fetch(
           "https://api.github.com/repos/abhro05/AutoDoc.ai/contributors",
+          { signal }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch");
@@ -89,6 +93,10 @@ const Contributors = () => {
           localStorage.setItem("github_contributors_time", now.toString());
         }
       } catch (error) {
+        if (error.name === "AbortError") {
+          // Silent ignore for cancelled requests in StrictMode/unmounts
+          return;
+        }
         console.error(
           "Error fetching contributors, falling back to cache if available:",
           error,
@@ -113,6 +121,10 @@ const Contributors = () => {
     };
 
     fetchContributors();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (
