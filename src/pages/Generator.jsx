@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 import "github-markdown-css/github-markdown-dark.css";
 import "../styles/Generator.css";
 import Navbar from "../components/Navbar";
@@ -215,7 +216,7 @@ const Generator = () => {
             <div
               className="output-content markdown-body"
               dangerouslySetInnerHTML={{
-                __html: marked.parse(markdownOutput || '# Your documentation will appear here...'),
+                __html: DOMPurify.sanitize(marked.parse(markdownOutput || '# Your documentation will appear here...')),
               }}
             />
           )}
