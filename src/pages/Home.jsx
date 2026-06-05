@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import Navbar from "../components/Navbar";
 
 function Home() {
+  useEffect(() => {
+    document.title = "Home | AutoDoc.ai";
+  }, []);
+
   return (
     <div className="home-container">
       <Navbar />

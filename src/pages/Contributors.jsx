@@ -46,6 +46,10 @@ const Contributors = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Contributors | AutoDoc.ai";
+  }, []);
+
+  useEffect(() => {
     const fetchContributors = async () => {
       try {
         const cachedData = localStorage.getItem("github_contributors");

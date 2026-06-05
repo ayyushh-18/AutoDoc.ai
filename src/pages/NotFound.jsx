@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../styles/NotFound.css";
 import Navbar from "../components/Navbar";
 
 const NotFound = () => {
+  useEffect(() => {
+    document.title = "404 - Page Not Found | AutoDoc.ai";
+  }, []);
+
   return (
     <div className="notfound-container">
       <Navbar />

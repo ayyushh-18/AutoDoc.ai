@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { marked } from "marked";
 import "github-markdown-css/github-markdown-dark.css";
@@ -6,6 +6,10 @@ import "../styles/Generator.css";
 import Navbar from "../components/Navbar";
 
 const Generator = () => {
+  useEffect(() => {
+    document.title = "Workspace | AutoDoc.ai";
+  }, []);
+
   const [repoUrl, setRepoUrl] = useState("");
   const [customInstructions, setCustomInstructions] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
