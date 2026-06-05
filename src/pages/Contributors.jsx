@@ -80,8 +80,15 @@ const Contributors = () => {
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
           setContributors(data);
-          localStorage.setItem("github_contributors", JSON.stringify(data));
-          localStorage.setItem("github_contributors_time", now.toString());
+          try {
+            localStorage.setItem("github_contributors", JSON.stringify(data));
+            localStorage.setItem("github_contributors_time", now.toString());
+          } catch (storageError) {
+            console.warn(
+              "Failed to save contributors to localStorage (quota exceeded or disabled):",
+              storageError
+            );
+          }
         }
       } catch (error) {
         console.error(
