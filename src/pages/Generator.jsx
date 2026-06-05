@@ -44,19 +44,75 @@ const Generator = () => {
     }, 2000);
   };
 
+  const extractRepoName = (url) => {
+    if (!url) return "";
+    try {
+      let cleanUrl = url.trim();
+      cleanUrl = cleanUrl.split("?")[0].split("#")[0];
+      cleanUrl = cleanUrl.replace(/\/$/, "");
+
+      if (cleanUrl.startsWith("git@") || cleanUrl.includes("@")) {
+        const parts = cleanUrl.split(":");
+        if (parts.length >= 2) {
+          const path = parts[parts.length - 1];
+          const pathParts = path.split("/").filter(Boolean);
+          if (pathParts.length >= 2) {
+            const treeIndex = pathParts.indexOf("tree");
+            const blobIndex = pathParts.indexOf("blob");
+            let repoIdx = pathParts.length - 1;
+            if (treeIndex !== -1 && treeIndex > 0) {
+              repoIdx = treeIndex - 1;
+            } else if (blobIndex !== -1 && blobIndex > 0) {
+              repoIdx = blobIndex - 1;
+            }
+            const repoName = pathParts[repoIdx];
+            if (repoName) {
+              return repoName.replace(/\.git$/, "");
+            }
+          } else if (pathParts.length === 1) {
+            return pathParts[0].replace(/\.git$/, "");
+          }
+        }
+      }
+
+      let urlString = cleanUrl;
+      if (!/^https?:\/\//i.test(cleanUrl) && !/^[a-z0-9]+:\/\//i.test(cleanUrl)) {
+        urlString = `https://${cleanUrl}`;
+      }
+      
+      const parsedUrl = new URL(urlString);
+      const pathParts = parsedUrl.pathname.split("/").filter(Boolean);
+      
+      if (pathParts.length > 0) {
+        const treeIndex = pathParts.indexOf("tree");
+        const blobIndex = pathParts.indexOf("blob");
+        let repoIdx = pathParts.length - 1;
+        
+        if (treeIndex !== -1 && treeIndex > 0) {
+          repoIdx = treeIndex - 1;
+        } else if (blobIndex !== -1 && blobIndex > 0) {
+          repoIdx = blobIndex - 1;
+        }
+        
+        const repoName = pathParts[repoIdx];
+        if (repoName) {
+          return repoName.replace(/\.git$/, "");
+        }
+      }
+    } catch (e) {
+      console.error("Error parsing repository URL name:", e);
+    }
+    return "";
+  };
+
   const handleDownloadFile = () => {
     if (!markdownOutput) return;
 
     let fileName = 'README.md';
     if (repoUrl) {
-      try {
-        const parts = repoUrl.trim().split('/');
-        const repoName = parts[parts.length - 1] || parts[parts.length - 2];
-        if (repoName) {
-          fileName = `${repoName.replace(/\.git$/, '')}-README.md`;
-        }
-      } catch (error) {
-        fileName = 'README.md';
+      const repoName = extractRepoName(repoUrl);
+      if (repoName) {
+        fileName = `${repoName}-README.md`;
       }
     }
 
