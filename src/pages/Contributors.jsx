@@ -44,6 +44,7 @@ const fallbackContributors = [
 const Contributors = () => {
   const [contributors, setContributors] = useState(fallbackContributors);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     document.title = "Contributors | AutoDoc.ai";
@@ -78,12 +79,39 @@ const Contributors = () => {
           }
         }
 
+        const hasCache = !!cachedData;
+
         const response = await fetch(
           "https://api.github.com/repos/abhro05/AutoDoc.ai/contributors",
           { signal }
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch");
+          let isRateLimit = response.status === 403;
+          try {
+            const errData = await response.json();
+            if (errData && errData.message && errData.message.toLowerCase().includes("rate limit")) {
+              isRateLimit = true;
+            }
+          } catch (e) {
+            // Ignore parse errors on error responses
+          }
+
+          if (isRateLimit) {
+            setError({
+              type: "warning",
+              message: hasCache
+                ? "GitHub API rate limit exceeded. Displaying cached contributor data."
+                : "GitHub API rate limit exceeded. Displaying fallback contributor data."
+            });
+          } else {
+            setError({
+              type: "error",
+              message: hasCache
+                ? `GitHub API request failed (Status ${response.status}). Displaying cached contributor data.`
+                : `GitHub API request failed (Status ${response.status}). Displaying fallback contributor data.`
+            });
+          }
+          throw new Error(`Request failed with status ${response.status}`);
         }
 
         const data = await response.json();
@@ -98,6 +126,7 @@ const Contributors = () => {
               storageError
             );
           }
+          setError(null); // Clear errors on success
         }
       } catch (error) {
         if (error.name === "AbortError") {
@@ -109,6 +138,18 @@ const Contributors = () => {
           error,
         );
         const cachedData = localStorage.getItem("github_contributors");
+        const hasCache = !!cachedData;
+
+        setError(prevError => {
+          if (prevError) return prevError;
+          return {
+            type: "error",
+            message: hasCache
+              ? "Network error: Failed to connect to GitHub API. Displaying cached contributor data."
+              : "Network error: Failed to connect to GitHub API. Displaying fallback contributor data."
+          };
+        });
+
         if (cachedData) {
           try {
             const parsedData = JSON.parse(cachedData);
@@ -144,6 +185,69 @@ const Contributors = () => {
           We thank the open‑source community for their amazing work.
         </p>
       </header>
+
+      {error && (
+        <div className={`contributors-alert ${error.type}`} role="alert">
+          <div className="contributors-alert-content">
+            <span className="contributors-alert-icon">
+              {error.type === "warning" ? (
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              ) : (
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              )}
+            </span>
+            <span>{error.message}</span>
+          </div>
+          <button
+            onClick={() => setError(null)}
+            className="contributors-alert-close"
+            aria-label="Dismiss alert"
+          >
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      )}
 
       <section className="grid">
         {isLoading ? (
