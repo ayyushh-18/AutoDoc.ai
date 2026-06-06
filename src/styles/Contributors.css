@@ -238,3 +238,63 @@
     padding-top: 6rem;
   }
 }
+
+/* Skeleton Card Styling */
+.skeleton-card {
+  pointer-events: none;
+  background: rgba(18, 18, 18, 0.35) !important;
+}
+
+.skeleton-avatar {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-name {
+  height: 20px;
+  width: 60%;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 auto 1.5rem;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-btn {
+  height: 42px;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 auto;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent !important;
+}
+
+/* Shimmer Animation Effect */
+.skeleton-avatar::after,
+.skeleton-name::after,
+.skeleton-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
