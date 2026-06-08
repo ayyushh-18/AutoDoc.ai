@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -12,21 +13,9 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="nav-logo">AutoDoc.ai</div>
-
-      {/* Hamburger Icon */}
-      <button
-        type="button"
-        className={`hamburger ${isOpen ? "toggle" : ""}`}
-        onClick={toggleMenu}
-        aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-        aria-expanded={isOpen}
-        aria-controls="primary-navigation"
-      >
-        <div className="line1"></div>
-        <div className="line2"></div>
-        <div className="line3"></div>
-      </button>
+      <div className="nav-left">
+        <div className="nav-logo">AutoDoc.ai</div>
+      </div>
 
       {/* Links Menu */}
       <ul id="primary-navigation" className={`nav-links ${isOpen ? "open" : ""}`}>
@@ -46,6 +35,24 @@ const Navbar = () => {
           </NavLink>
         </li>
       </ul>
+
+      <div className="nav-actions">
+        <ThemeToggle />
+
+        {/* Hamburger Icon */}
+        <button
+          type="button"
+          className={`hamburger ${isOpen ? "toggle" : ""}`}
+          onClick={toggleMenu}
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
+          aria-controls="primary-navigation"
+        >
+          <div className="line1"></div>
+          <div className="line2"></div>
+          <div className="line3"></div>
+        </button>
+      </div>
     </nav>
   );
 };
