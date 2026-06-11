@@ -190,10 +190,31 @@ const Generator = () => {
           async: true,
         }),
       });
-      const data = await response.json();
+
+      const text = await response.text();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Documentation generation failed.');
+        let errMsg = `HTTP ${response.status}`;
+        if (text) {
+          try {
+            const parsed = JSON.parse(text);
+            errMsg = parsed.error || parsed.message || errMsg;
+          } catch (_) {
+            /* non-JSON error body, keep basic message */
+          }
+        }
+        throw new Error(errMsg);
+      }
+
+      if (!text) {
+        throw new Error('Empty response received from server');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        throw new Error('Invalid JSON response from server');
       }
 
       if (data.jobId) {

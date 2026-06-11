@@ -47,6 +47,33 @@ const sendJson = (res, statusCode, payload) => {
   res.end(JSON.stringify(payload));
 };
 
+// Safely parse JSON from a Response-like object. Returns {} on empty or invalid bodies.
+const safeJson = async (response) => {
+  if (!response) return {};
+
+  // Prefer calling json() if available (mocks often provide this).
+  if (typeof response.json === "function") {
+    try {
+      const data = await response.json();
+      return data || {};
+    } catch (_) {
+      // fall through to text parsing
+    }
+  }
+
+  if (typeof response.text === "function") {
+    try {
+      const text = await response.text();
+      if (!text) return {};
+      return JSON.parse(text);
+    } catch (_) {
+      return {};
+    }
+  }
+
+  return {};
+};
+
 const readEnv = (env, key) => String(env[key] || "").trim();
 
 const normalizeBaseUrl = (url) => url.replace(/\/+$/, "");
@@ -199,7 +226,7 @@ const githubFetch = async (url, env, retryCount = 0) => {
     throw error;
   }
 
-  return response.json();
+  return safeJson(response);
 };
 
 const isTextFile = (path) => {
@@ -335,12 +362,12 @@ const callOpenAiCompatible = async (provider, messages, env, onChunk) => {
   });
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
+    const data = await safeJson(response);
     throw new Error(data.error?.message || "LLM provider request failed.");
   }
 
   if (!onChunk) {
-    const data = await response.json();
+    const data = await safeJson(response);
     return data.choices?.[0]?.message?.content || "";
   }
 
@@ -393,12 +420,12 @@ const callAnthropic = async (provider, messages, env, onChunk) => {
   });
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
+    const data = await safeJson(response);
     throw new Error(data.error?.message || "LLM provider request failed.");
   }
 
   if (!onChunk) {
-    const data = await response.json();
+    const data = await safeJson(response);
     return data.content?.map((part) => part.text || "").join("") || "";
   }
 
@@ -455,12 +482,12 @@ const callGemini = async (provider, messages, env, onChunk) => {
   });
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
+    const data = await safeJson(response);
     throw new Error(data.error?.message || "LLM provider request failed.");
   }
 
   if (!onChunk) {
-    const data = await response.json();
+    const data = await safeJson(response);
     return data.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "";
   }
 

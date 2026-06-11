@@ -84,15 +84,20 @@ const Contributors = () => {
           "https://api.github.com/repos/abhro05/AutoDoc.ai/contributors",
           { signal }
         );
+
+        const text = await response.text();
+
         if (!response.ok) {
           let isRateLimit = response.status === 403;
-          try {
-            const errData = await response.json();
-            if (errData && errData.message && errData.message.toLowerCase().includes("rate limit")) {
-              isRateLimit = true;
+          if (text) {
+            try {
+              const errData = JSON.parse(text);
+              if (errData && errData.message && errData.message.toLowerCase().includes("rate limit")) {
+                isRateLimit = true;
+              }
+            } catch (e) {
+              // Ignore parse errors on error responses
             }
-          } catch (e) {
-            // Ignore parse errors on error responses
           }
 
           if (isRateLimit) {
@@ -113,7 +118,15 @@ const Contributors = () => {
           throw new Error(`Request failed with status ${response.status}`);
         }
 
-        const data = await response.json();
+        let data = [];
+        if (text) {
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            data = [];
+          }
+        }
+
         if (Array.isArray(data) && data.length > 0) {
           setContributors(data);
           try {
